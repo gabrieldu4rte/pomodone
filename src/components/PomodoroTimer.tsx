@@ -1,91 +1,172 @@
-// src/components/PomodoroTimer.tsx
+import type React from "react"
+import { useState, useEffect } from "react"
+import type { PomodoroType } from "../pomodoroConfig"
 
-import React, { useState, useEffect } from 'react';
-import { PomodoroType } from '../pomodoroConfig';
-
-type Phase = 'work' | 'shortBreak' | 'longBreak';
+type Phase = "work" | "shortBreak" | "longBreak"
 
 interface PomodoroTimerProps {
-  config: PomodoroType;
-  onResetSelection: () => void;
-  typeName: string;
+  config: PomodoroType
+  onResetSelection: () => void
+  typeName: string
 }
 
 const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ config, onResetSelection, typeName }) => {
-  const [phase, setPhase] = useState<Phase>('work');
-  const [cycle, setCycle] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(config.workDuration * 60);
-  const [isRunning, setIsRunning] = useState(false);
+  const [phase, setPhase] = useState<Phase>("work")
+  const [cycle, setCycle] = useState(0)
+  const [secondsLeft, setSecondsLeft] = useState(config.workDuration * 60)
+  const [isRunning, setIsRunning] = useState(false)
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout
     if (isRunning) {
       timer = setInterval(() => {
-        setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
-      }, 1000);
+        setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0))
+      }, 1000)
     }
-    return () => clearInterval(timer);
-  }, [isRunning]);
+    return () => clearInterval(timer)
+  }, [isRunning])
 
   useEffect(() => {
     if (secondsLeft === 0) {
-      if (phase === 'work') {
+      if (phase === "work") {
         if (cycle < config.cycles - 1) {
-          setPhase('shortBreak');
-          setSecondsLeft(config.shortBreak * 60);
+          setPhase("shortBreak")
+          setSecondsLeft(config.shortBreak * 60)
         } else {
-          setPhase('longBreak');
-          setSecondsLeft(config.longBreak * 60);
+          setPhase("longBreak")
+          setSecondsLeft(config.longBreak * 60)
         }
       } else {
-        if (phase === 'longBreak') {
-          setCycle(0);
-        } else if (phase === 'shortBreak') {
-          setCycle(cycle + 1);
+        if (phase === "longBreak") {
+          setCycle(0)
+        } else if (phase === "shortBreak") {
+          setCycle(cycle + 1)
         }
-        setPhase('work');
-        setSecondsLeft(config.workDuration * 60);
+        setPhase("work")
+        setSecondsLeft(config.workDuration * 60)
       }
     }
-  }, [secondsLeft, phase, cycle, config]);
+  }, [secondsLeft, phase, cycle, config])
 
   const toggleTimer = () => {
-    setIsRunning(!isRunning);
-  };
+    setIsRunning(!isRunning)
+  }
 
   const resetTimer = () => {
-    setIsRunning(false);
-    setPhase('work');
-    setCycle(0);
-    setSecondsLeft(config.workDuration * 60);
-  };
+    setIsRunning(false)
+    setPhase("work")
+    setCycle(0)
+    setSecondsLeft(config.workDuration * 60)
+  }
 
   const formatTime = (secs: number) => {
-    const minutes = Math.floor(secs / 60);
-    const seconds = secs % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+    const minutes = Math.floor(secs / 60)
+    const seconds = secs % 60
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+  }
+
+  const getPhaseInfo = () => {
+    switch (phase) {
+      case "work":
+        return { name: "Focus Time", icon: "🎯", color: "rose" }
+      case "shortBreak":
+        return { name: "Short Break", icon: "☕", color: "blue" }
+      case "longBreak":
+        return { name: "Long Break", icon: "🌟", color: "purple" }
+    }
+  }
+
+  const phaseInfo = getPhaseInfo()
+  const progress = ((config.workDuration * 60 - secondsLeft) / (config.workDuration * 60)) * 100
 
   return (
-    <div>
-      <h2>Pomodoro {typeName.charAt(0).toUpperCase() + typeName.slice(1)}</h2>
-      <p>
-        Current Phase:{" "}
-        {phase === 'work'
-          ? "Work"
-          : phase === 'shortBreak'
-          ? "Short Break"
-          : "Long Break"}
-      </p>
-      <p>Cicle: {cycle + 1} of {config.cycles}</p>
-      <h1>{formatTime(secondsLeft)}</h1>
-      <button onClick={toggleTimer}>
-        {isRunning ? 'Pause' : 'Start'}
-      </button>
-      <button onClick={resetTimer}>Reset</button>
-      <button onClick={onResetSelection}>Change Pomo Type</button>
-    </div>
-  );
-};
+    <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-rose-100">
+      <div className="text-center mb-8">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+          Pomodoro {typeName.charAt(0).toUpperCase() + typeName.slice(1)}
+        </h2>
+        <div className="flex items-center justify-center space-x-2 text-lg">
+          <span className="text-2xl">{phaseInfo.icon}</span>
+          <span className={`font-semibold text-${phaseInfo.color}-600`}>{phaseInfo.name}</span>
+        </div>
+      </div>
 
-export default PomodoroTimer;
+      <div className="relative w-48 h-48 mx-auto mb-8">
+        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" fill="none" className="text-gray-200" />
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            strokeDasharray={`${2 * Math.PI * 45}`}
+            strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress / 100)}`}
+            className={`text-${phaseInfo.color}-500 transition-all duration-1000 ease-out`}
+            strokeLinecap="round"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-mono font-bold text-gray-800">{formatTime(secondsLeft)}</div>
+            <div className="text-sm text-gray-500 mt-1">
+              Cycle {cycle + 1} of {config.cycles}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <button
+          onClick={toggleTimer}
+          className={`flex-1 py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 
+            transform hover:scale-105 active:scale-95 ${
+              isRunning
+                ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
+                : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+            }`}
+        >
+          {isRunning ? "⏸️ Pause" : "▶️ Start"}
+        </button>
+
+        <button
+          onClick={resetTimer}
+          className="flex-1 py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 
+            transform hover:scale-105 active:scale-95 bg-gradient-to-r from-gray-500 to-gray-600 
+            hover:from-gray-600 hover:to-gray-700 text-white"
+        >
+          🔄 Reset
+        </button>
+      </div>
+
+      <button
+        onClick={onResetSelection}
+        className="w-full py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 
+          transform hover:scale-105 active:scale-95 bg-gradient-to-r from-orange-500 to-orange-600 
+          hover:from-orange-600 hover:to-orange-700 text-white"
+      >
+        ← Change Pomo Type
+      </button>
+
+      <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div className="text-2xl font-bold text-gray-800">{config.workDuration}</div>
+            <div className="text-xs text-gray-500">Work (min)</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-gray-800">{config.shortBreak}</div>
+            <div className="text-xs text-gray-500">Break (min)</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-gray-800">{config.cycles}</div>
+            <div className="text-xs text-gray-500">Cycles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PomodoroTimer
