@@ -1,3 +1,33 @@
+# Pomonize
+Pomonize is a productivity-focused web application designed to help users stay focused, organized, and in control of their time using the Pomodoro Technique. Whether you're studying, working, or just trying to avoid distractions, Pomonize gives you the tools to make every minute count.
+
+## Features
+Four Pomodoro Modes – Choose the intensity that best suits your focus level:
+
+Light – Ideal for gentle workflows and starting new habits.
+
+Mid – A balanced mode for most day-to-day tasks.
+
+Classic – The traditional Pomodoro (25/5) for tried-and-tested productivity.
+
+Hardcore – For deep focus sessions with longer sprints and minimal breaks.
+
+Simple, Minimalist UI – Clean interface to help you focus without distractions.
+
+Focus-Oriented Design – Everything is built to keep you in the zone.
+
+## Why Pomonize?
+While most Pomodoro timers offer a one-size-fits-all experience, Pomonize lets you tailor your focus strategy to your needs. Whether you’re easing into a task or diving into intense deep work, Pomonize adapts to your energy and motivation levels.
+
+## How It Works
+Select one of the four Pomodoro types.
+
+Press start and begin your focused session.
+
+Take scheduled short or long breaks based on your selected mode.
+
+Track your progress and stay consistent.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
