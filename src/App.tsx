@@ -23,10 +23,10 @@ const App: React.FC = () => {
       <header className="bg-white/80 backdrop-blur-sm border-b border-rose-100 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-rose-600 to-orange-600 bg-clip-text text-transparent">
-            🍅 PomoDone
+            🍅 Pomonize
           </h1>
           <p className="text-center text-gray-600 mt-2 text-sm md:text-base">
-            Boost your productivity with the Pomodoro Technique and get your tasks PomoDone!
+            Boost your productivity with the Pomodoro Technique and get your tasks Pomonized!
           </p>
         </div>
       </header>
@@ -43,7 +43,16 @@ const App: React.FC = () => {
 
       <footer className="bg-white/50 backdrop-blur-sm border-t border-rose-100 py-6">
         <div className="container mx-auto px-4">
-          <p className="text-center text-gray-500 text-sm">© 2025 PomoDone. All rights reserved.</p>
+          <p className="text-center text-gray-500 text-sm">©
+            {" "}
+            <a
+              href="https://github.com/gabrieldu4rte"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              Gabriel Duarte (alesred)
+            </a>{" "}| 2025 Pomonize. All rights reserved.</p>
         </div>
       </footer>
     </div>
